@@ -1,8 +1,6 @@
 import React from 'react';
+import axios from 'axios'
 
-const blobToBase64 = require('blob-to-base64')
-
-const audioType = 'audio/*';
 
 class RecordingAPI extends React.Component {
   constructor(props) {
@@ -10,6 +8,7 @@ class RecordingAPI extends React.Component {
     this.state = {
       recording: false,
       audios: [],
+      blob: ''
     };
   }
 
@@ -54,22 +53,17 @@ class RecordingAPI extends React.Component {
     const blob = new Blob(this.chunks, {type: 'audio/ogg; code=opus'});
     // generate video url from blob[]
 
+    this.setState({blob: blob.size});
     console.log(blob)
-
-    var a = blobToBase64()
-
-    a(blob, function (error, base64) {
-        if (!error) {
-          console.log(base64)
-        }
-      })
-    //const audioURL = '';
-    const reader = new window.FileReader()
-    reader.readAsDataURL(blob)
     
-    reader.onloadend =()=>{
-        this.setState({audios: blob});
-    }
+    var reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => {
+      const note = reader.result
+      this.setState({audios: note});
+    } 
+   
+    
     
     
   }
@@ -85,7 +79,7 @@ class RecordingAPI extends React.Component {
 
     return (
       <div className="camera">
-      {JSON.stringify(this.state.audios)}
+      {JSON.stringify(this.state.blob)}
         <audio
         
 
